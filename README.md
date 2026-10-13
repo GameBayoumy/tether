@@ -65,12 +65,7 @@ In the headset:
 
 ## Unity
 
-Tether ships an OpenXR runtime and makes it the Mac's default. The first time it runs, macOS asks for your password once, to register it in `/usr/local/share/openxr`. After that, any Unity project renders into the headset with no extra setup:
-
-1. Install **OpenXR Plugin** 1.18 or later.
-2. In **Project Settings › XR Plug‑in Management**, open the macOS (Standalone) tab and enable **OpenXR**.
-3. Under **OpenXR**, add the **Oculus Touch Controller Profile** and set **Render Mode** to **Multi‑pass**. Leave **Play Mode OpenXR Runtime** on **System Default**.
-4. Start Link in the headset, then press **Play**.
+Tether ships an OpenXR runtime and makes it the Mac's default OpenXR runtime. The first time Tether runs, macOS asks for your password once. With that done, a Unity project that uses OpenXR works as it is. Start from Unity's VR template, or enable **OpenXR** for macOS under **Project Settings › XR Plug‑in Management**. Then start Link in the headset and press **Play**.
 
 While Unity is rendering, Tether passes its frames straight to the headset. The Meta button still works: the End Link panel takes over the display while it's open.
 

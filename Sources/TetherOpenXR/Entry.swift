@@ -112,6 +112,9 @@ private let supportedExtensions: [(String, UInt32)] = [
     ("XR_KHRX2_metal_enable", 1),
     ("XR_KHR_composition_layer_depth", 6),
     ("XR_EXT_local_floor", 1),
+    // Only to unlock these controllers' interaction profiles; they map onto Touch.
+    ("XR_META_touch_controller_plus", 1),
+    ("XR_FB_touch_controller_pro", 1),
 ]
 
 // MARK: - Instance

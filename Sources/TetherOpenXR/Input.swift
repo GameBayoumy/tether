@@ -93,7 +93,15 @@ func handIndex(_ path: XrPath, instance: Instance) -> Int? {
     }
 }
 
-let touchProfile = "/interaction_profiles/oculus/touch_controller"
+/// Touch-family profiles, in order of preference. The Plus and Pro controllers share Touch's layout;
+/// their extra inputs (trigger force, stylus, ...) simply stay unbound.
+let touchProfiles = [
+    "/interaction_profiles/oculus/touch_controller",
+    "/interaction_profiles/meta/touch_plus_controller",
+    "/interaction_profiles/meta/touch_controller_plus",
+    "/interaction_profiles/meta/touch_pro_controller",
+    "/interaction_profiles/facebook/touch_controller_pro",
+]
 let simpleProfile = "/interaction_profiles/khr/simple_controller"
 
 /// Resolves an Oculus Touch / simple controller binding path to a physical input.
@@ -181,12 +189,11 @@ func readSource(_ source: InputSource, _ c: qlh_controller) -> (bool: Bool, floa
 }
 
 extension Session {
-    /// Picks the interaction profile the app suggested (Touch preferred) and resolves every attached action.
+    /// Picks the interaction profile the app suggested (Touch family first) and resolves every attached action.
     func resolveBindings() {
         let instance = self.instance
-        let touch = instance.paths.path(touchProfile)
-        let simple = instance.paths.path(simpleProfile)
-        let chosen = instance.suggested[touch] != nil ? touch : (instance.suggested[simple] != nil ? simple : 0)
+        let chosen = (touchProfiles + [simpleProfile]).map { instance.paths.path($0) }
+            .first { instance.suggested[$0] != nil } ?? 0
         interactionProfile = chosen
         guard chosen != 0, let profileName = instance.paths.string(chosen) else { return }
         for set in attachedSets {
