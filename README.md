@@ -65,19 +65,18 @@ In the headset:
 
 ## Unity
 
-Tether includes an OpenXR runtime and registers it with macOS while it runs. To render a Unity project into the headset:
+Tether ships an OpenXR runtime and makes it the Mac's default. The first time it runs, macOS asks for your password once, to register it in `/usr/local/share/openxr`. After that, any Unity project renders into the headset with no extra setup:
 
 1. Install **OpenXR Plugin** 1.18 or later.
 2. In **Project Settings › XR Plug‑in Management**, open the macOS (Standalone) tab and enable **OpenXR**.
-3. Under **OpenXR**, add the **Oculus Touch Controller Profile** and set **Render Mode** to **Multi‑pass**.
-4. Copy [`Integrations/Unity/Editor/TetherOpenXR.cs`](Integrations/Unity/Editor/TetherOpenXR.cs) into an `Editor` folder in your project. It points Play mode at Tether's runtime.
-5. Start Link in the headset, then press **Play**.
+3. Under **OpenXR**, add the **Oculus Touch Controller Profile** and set **Render Mode** to **Multi‑pass**. Leave **Play Mode OpenXR Runtime** on **System Default**.
+4. Start Link in the headset, then press **Play**.
 
 While Unity is rendering, Tether passes its frames straight to the headset. The Meta button still works: the End Link panel takes over the display while it's open.
 
 ## Unreal Engine
 
-Unreal's OpenXR plugin doesn't support macOS, so VR Preview needs a patched plugin. It needs the OpenXR loader for macOS and a Metal render bridge. Tether's runtime works with such a build (tested with UE 5.8, launched with `-vr`). The patch isn't included because it modifies Epic's engine code. Treat Unreal support as experimental.
+Unreal's OpenXR plugin doesn't support macOS, so VR Preview needs a patched plugin. It needs the OpenXR loader for macOS and a Metal render bridge. Tether's runtime works with such a build (tested with UE 5.8, launched with `-vr`). The patch isn't included because it modifies Epic's engine code. Tether can't work around this from outside the engine. Treat Unreal support as experimental.
 
 ## How it works
 
