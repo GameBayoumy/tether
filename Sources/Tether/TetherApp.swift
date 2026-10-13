@@ -12,6 +12,7 @@ struct TetherApp: App {
             exit(0)
         }
         RuntimeRegistration.registerForSession()
+        UnrealPlugin.installInBackground()
     }
 
     var body: some Scene {

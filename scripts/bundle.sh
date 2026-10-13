@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP="$ROOT/build/Tether.app"
-VERSION="0.1.0"
+VERSION="0.2.0"
 
 cd "$ROOT"
 swift build -c release
@@ -27,6 +27,21 @@ cat > "$APP/Contents/Resources/openxr/tether_openxr.json" <<JSON
     }
 }
 JSON
+
+# TetherXR for Unreal, one build per engine version, from the tether-unreal repo's scripts/build.sh.
+UNREAL_OUT="${TETHER_UNREAL_OUT:-$ROOT/../tether-unreal/out}"
+for build in "$UNREAL_OUT"/TetherXR-UE*; do
+    [ -d "$build/Binaries" ] || continue
+    version="${build##*TetherXR-UE}"
+    target="$APP/Contents/Resources/unreal/$version/TetherXR"
+    mkdir -p "$target"
+    for part in TetherXR.uplugin Binaries Source Config Resources; do
+        [ -e "$build/$part" ] && cp -R "$build/$part" "$target/"
+    done
+    # Lets Tether tell whether an engine already has this exact build.
+    (cd "$target" && find Binaries -type f -print0 | sort -z | xargs -0 shasum | shasum | cut -d' ' -f1) > "$target/.tether-build"
+    echo "Bundled TetherXR for Unreal $version"
+done
 
 ICONSET="$ROOT/build/AppIcon.iconset"
 rm -rf "$ICONSET"

@@ -10,7 +10,7 @@ Tether turns an Apple silicon Mac into a Link PC for a Quest headset. Plug the h
 
 - **Native Link over USB.** Tether pairs with the headset automatically and shows up on its Quest Link prompt. No sideloaded APK, no Wi‑Fi streaming app.
 - **Your Mac desktop in VR.** The desktop is shown on a large screen in a quiet room. Point a controller at the screen to move the pointer. The trigger clicks and drags, so you can move windows around.
-- **OpenXR runtime for Unity.** Press Play in the Unity editor and the scene renders into the headset with head and controller tracking.
+- **Unity and Unreal.** Press Play in Unity or VR Preview in Unreal, and the scene renders into the headset with head and controller tracking. Nothing to set up: Tether registers its OpenXR runtime and installs its Unreal plugin.
 - **Meta button:** hold it to recenter the view. Short‑press it to open the End Link panel, which ends the session and returns the headset to Home.
 - **Headset dashboard.** Shows battery, controllers, whether the headset is worn, OS, storage and USB speed, plus a live mirror of the headset's display. The dashboard and mirror need USB debugging.
 - **Menu bar and island.** A compact status island at the top of the screen, a menu bar item, and Open at Login. Tether starts by itself when you connect the headset.
@@ -71,7 +71,7 @@ While Unity is rendering, Tether passes its frames straight to the headset. The 
 
 ## Unreal Engine
 
-Unreal's OpenXR plugin doesn't support macOS, so VR Preview needs a patched plugin. It needs the OpenXR loader for macOS and a Metal render bridge. Tether's runtime works with such a build (tested with UE 5.8, launched with `-vr`). The patch isn't included because it modifies Epic's engine code. Tether can't work around this from outside the engine. Treat Unreal support as experimental.
+Tether installs its [TetherXR plugin](https://github.com/GameBayoumy/tether-unreal) into every Unreal Engine the Epic Games Launcher has installed, and keeps it up to date. Builds for UE 5.8 and 5.3 are included. Open a VR project, start Link in the headset and click **VR Preview**. C++ projects pick up the plugin on their next build. Unreal support is new; please report anything that looks off.
 
 ## How it works
 
@@ -86,7 +86,7 @@ Unreal's OpenXR plugin doesn't support macOS, so VR Preview needs a patched plug
 - **`Sources/CXRSP`**: the USB host. It contains [libxrsp](Sources/CXRSP/LICENSE-libxrsp) and `link_host.c`, which handles pairing, the streaming session, pose and input decoding, the headset clock, and frame timing.
 - **`Sources/TetherCore`**: per‑slice H.264 encoding, shared by the app and the runtime. The headset decodes each 3616×1920 frame as five independent Baseline slices.
 - **`Sources/Tether`**: the app, built with SwiftUI. It contains the dashboard, desktop renderer, controller pointer, island and menu bar.
-- **`Sources/TetherOpenXR`**: the OpenXR runtime (`libTetherOpenXR.dylib`). It reads tracking from shared memory written by the app, encodes the app's frames, and hands them to Tether to send.
+- **`Sources/TetherOpenXR`**: the OpenXR runtime (`libTetherOpenXR.dylib`). It reads tracking from shared memory written by the app, encodes the app's frames, and hands them to Tether to send. It also exports a small C API ([`tether_direct.h`](Sources/CXRSP/include/tether_direct.h)) that the Unreal plugin uses.
 
 ### Development switches
 
