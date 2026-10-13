@@ -1,0 +1,7 @@
+module CXRSP {
+    header "xrsp.h"
+    header "xrsp_usb.h"
+    header "link_host.h"
+    header "tether_xr_shared.h"
+    export *
+}
